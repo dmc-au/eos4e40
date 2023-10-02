@@ -1,0 +1,91 @@
+name: Calculate Inference Pipeline
+on: push                                         
+
+
+permissions:
+  contents: write
+
+env:
+  MODEL_ID: ${{ github.event.repository.name }}
+  SHA: ${{ github.sha }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      #- name: Checkout model repo for demo library
+      #  uses: actions/checkout@v3
+      #  with:
+      #    path: demo-model
+
+      - name: Print system details
+        run: sudo lshw -short
+      
+      - name: Check into ersilia-os/ersilia repo 
+        uses: actions/checkout@v3
+        with:
+          repository: ersilia-os/ersilia
+
+      - name: Add conda to system path
+        run: echo $CONDA/bin >> $GITHUB_PATH
+
+      - name: Source conda
+        run: source $CONDA/etc/profile.d/conda.sh
+
+      - name: Set Python to 3.10.10
+        run:
+         conda install -y python=3.10.10
+
+      - name: Install dependencies
+        run: |
+          source activate
+          conda init
+          conda install git-lfs -c conda-forge
+          git-lfs install
+          conda install gh -c conda-forge
+          
+      - name: Install ersilia
+        run: |
+          source activate
+          python --version
+          echo "After conda init"
+          conda init
+          python -m pip install -e .[test]
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+           aws-region: eu-central-1
+      
+      - name: Get input library
+        run: |
+          aws s3 cp s3://isaura-bucket/rl_100000.csv rl_100000.csv
+          
+      - name: Remove pre-calculated inputs
+        run: |
+          # Download previously calculated inputs (pci)
+          # aws s3 cp s3://isaura-bucket/out/$MODEL_ID/output/pci.csv .
+          # Remove pci from new reference library
+          # { head -n 1 rl.csv; grep -v -F -x -f <(tail -n +2 pci.csv) <(tail -n +2 rl.csv); } > delta-input.csv
+          # Set final pci to upload
+          # awk '(NR == 1) || (FNR > 1)' pci.csv delta-input.csv > pci-upload.csv
+          
+      - name: Predict output
+        run: |
+          source activate
+          echo "Sample model id selected: $MODEL_ID"
+          ersilia fetch $MODEL_ID
+          ersilia serve $MODEL_ID
+          echo "$MODEL_ID succesfully fetched and served"
+          # ersilia sample -n 100 -f input.csv -b 1000
+          ersilia api -i rl_100000.csv -o ../$SHA.csv
+
+      - name: Upload to S3
+        run: |  
+          aws s3 cp ../$SHA.csv s3://isaura-bucket/out/$MODEL_ID/output/$SHA.csv
+          # aws s3 cp pci-upload.csv s3://isaura-bucket/out/$MODEL_ID/output/pci.csv
+
+        
