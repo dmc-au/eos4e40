@@ -61,7 +61,7 @@ jobs:
       
       - name: Get input library
         run: |
-          aws s3 cp s3://isaura-bucket/rl_100000.csv rl_100000.csv
+          aws s3 cp s3://isaura-bucket/rl-10000.csv rl-10000.csv
           
       - name: Remove pre-calculated inputs
         run: |
@@ -80,7 +80,7 @@ jobs:
           ersilia serve $MODEL_ID
           echo "$MODEL_ID succesfully fetched and served"
           # ersilia sample -n 100 -f input.csv -b 1000
-          ersilia api -i rl_100000.csv -o ../$SHA.csv
+          ersilia api -i rl-10000.csv -o ../$SHA.csv
 
       - name: Upload to S3
         run: |  
