@@ -5,35 +5,35 @@ permissions:
   contents: read
 
 jobs:
-  matrix-inference-1:
-    strategy:
-      matrix:
-        numerator: [1,2,3,4,5,6,7,8,9,10]
-    uses: ./.github/workflows/instance-inference.yml
-    with:
-      numerator: ${{ matrix.numerator }}
-      denominator: 50
-    secrets: inherit
+  # matrix-inference-1:
+  #   strategy:
+  #     matrix:
+  #       numerator: [1,2,3,4,5,6,7,8,9,10]
+  #   uses: ./.github/workflows/instance-inference.yml
+  #   with:
+  #     numerator: ${{ matrix.numerator }}
+  #     denominator: 50
+  #   secrets: inherit
   
-  matrix-inference-2:
-      strategy:
-        matrix:
-          numerator: [11,12,13,14,15,16,17,18,19,20]
-      uses: ./.github/workflows/instance-inference.yml
-      with:
-        numerator: ${{ matrix.numerator }}
-        denominator: 50
-      secrets: inherit
+  # matrix-inference-2:
+  #     strategy:
+  #       matrix:
+  #         numerator: [11,12,13,14,15,16,17,18,19,20]
+  #     uses: ./.github/workflows/instance-inference.yml
+  #     with:
+  #       numerator: ${{ matrix.numerator }}
+  #       denominator: 50
+  #     secrets: inherit
 
-  matrix-inference-3:
-    strategy:
-      matrix:
-        numerator: [21,22,23,24,25,26,27,28,29,30]
-    uses: ./.github/workflows/instance-inference.yml
-    with:
-      numerator: ${{ matrix.numerator }}
-      denominator: 50
-    secrets: inherit
+  # matrix-inference-3:
+  #   strategy:
+  #     matrix:
+  #       numerator: [21,22,23,24,25,26,27,28,29,30]
+  #   uses: ./.github/workflows/instance-inference.yml
+  #   with:
+  #     numerator: ${{ matrix.numerator }}
+  #     denominator: 50
+  #   secrets: inherit
   
   matrix-inference-4:
       strategy:
@@ -43,6 +43,7 @@ jobs:
       with:
         numerator: ${{ matrix.numerator }}
         denominator: 50
+      secrets: inherit
 
   matrix-inference-5:
       strategy:
@@ -52,6 +53,7 @@ jobs:
       with:
         numerator: ${{ matrix.numerator }}
         denominator: 50
+      secrets: inherit
 
 # name: Calculate Inference Pipeline
 # on: push                                         
