@@ -89,20 +89,18 @@ jobs:
           conda init
           python -m pip install -e .[test]
           
-      - name: Predict output (for input partition)
+      - name: Predict partition output and upload
         run: |
           numerator=${{ inputs.numerator }}
+          index=$((numerator - 1))
+          
           source activate
           echo "Sample model id selected: $MODEL_ID"
           ersilia fetch $MODEL_ID
           ersilia serve $MODEL_ID
           echo "$MODEL_ID succesfully fetched and served"
           # ersilia api -i reference_library.csv -o ../$SHA.csv
-          ersilia api -i $(printf "partition_%04d.csv" $numerator) -o ../${SHA}$(printf "_%04d.csv" $numerator)
-
-      - name: Upload to S3
-        run: |
-          numerator=${{ inputs.numerator }}
-          index=$((numerator - 1))
-          aws s3 cp ../${SHA}$(printf "_%04d.csv" $index) s3://isaura-bucket/out/$MODEL_ID/${SHA}$(printf "_%04d.csv" $index)
+          ersilia api -i $(printf "partition_%04d.csv" $index) -o ../${SHA}$(printf "_%04d.csv" $numerator)
+          
+          aws s3 cp ../${SHA}$(printf "_%04d.csv" $numerator) s3://isaura-bucket/out/$MODEL_ID/${SHA}$(printf "_%04d.csv" $numerator)
           # aws s3 cp pci-upload.csv s3://isaura-bucket/out/$MODEL_ID/output/pci.csv
