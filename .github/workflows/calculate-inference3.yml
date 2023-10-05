@@ -48,7 +48,7 @@ jobs:
   matrix-inference-5:
     strategy:
       matrix:
-        numerator: [41,42,43,44,45,46,47,48,49,50]
+        numerator: [1,41,42,43,44,45,46,47,48,49,50]
     uses: ./.github/workflows/instance-inference.yml
     with:
       numerator: ${{ matrix.numerator }}
