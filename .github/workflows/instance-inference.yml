@@ -41,10 +41,9 @@ jobs:
         run: |
           numerator=${{ inputs.numerator }}
           denominator=${{ inputs.denominator }}
-          
           filename="reference_library.csv"
           
-          ## total_lines
+          ## Total # lines in given reference library
           total_lines=$(wc -l < "$filename")
           echo $total_lines
           
@@ -60,6 +59,9 @@ jobs:
             partition=$(printf "partition_%04d.csv" $i)
             sed -i '1i smiles' "$partition"
           done
+
+          # List files in dir
+          ls
 
       - name: Add conda to system path
         run: echo $CONDA/bin >> $GITHUB_PATH
