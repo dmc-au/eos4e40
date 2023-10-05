@@ -103,5 +103,6 @@ jobs:
       - name: Upload to S3
         run: |
           numerator=${{ inputs.numerator }}
-          aws s3 cp ../${SHA}$(printf "_%04d.csv" $numerator) s3://isaura-bucket/out/$MODEL_ID/${SHA}$(printf "_%04d.csv" $numerator)
+          index=$((numerator - 1))
+          aws s3 cp ../${SHA}$(printf "_%04d.csv" $index) s3://isaura-bucket/out/$MODEL_ID/${SHA}$(printf "_%04d.csv" $index)
           # aws s3 cp pci-upload.csv s3://isaura-bucket/out/$MODEL_ID/output/pci.csv
