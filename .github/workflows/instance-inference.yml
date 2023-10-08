@@ -99,8 +99,6 @@ jobs:
           ersilia fetch $MODEL_ID
           ersilia serve $MODEL_ID
           echo "$MODEL_ID succesfully fetched and served"
-          # ersilia api -i reference_library.csv -o ../$SHA.csv
           ersilia api -i $(printf "partition_%04d.csv" $index) -o ../${SHA}$(printf "_%04d.csv" $numerator)
           
           aws s3 cp ../${SHA}$(printf "_%04d.csv" $numerator) s3://isaura-bucket/out/$MODEL_ID/${SHA}$(printf "_%04d.csv" $numerator)
-          # aws s3 cp pci-upload.csv s3://isaura-bucket/out/$MODEL_ID/output/pci.csv
