@@ -1,0 +1,14 @@
+name: Upload model to DockerHub
+
+on:
+  push:
+    branches:
+      - main  # This workflow will run on push events to the main branch
+
+jobs:
+  say_hello:
+    runs-on: ubuntu-latest  # Specifies the type of runner to use
+
+    steps:
+      - name: Print Hello World
+        run: echo Hello, world!  # Executes a single command using the runners shell
