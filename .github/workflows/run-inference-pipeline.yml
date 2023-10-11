@@ -1,12 +1,14 @@
 name: Run Inference Pipeline
-on: push                                         
+on:
+  push:
+    branches: ['main']
 
 permissions:
   contents: read
 
 jobs:
-  if: github.repository != 'ersilia-os/eos-template'
   matrix-inference:
+    if: github.repository != 'ersilia-os/eos-template'
     strategy:
       matrix:
         numerator: [
