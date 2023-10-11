@@ -53,7 +53,7 @@ jobs:
           # Split the file
           split -l $lines_per_file -a 4 -d --additional-suffix=.csv "$filename" partition_
           
-          # Add 'smiles' to header of all partition files beyond the first
+          # Add 'smiles' to header of all partition files beyond the first (assumes reference library already has it)
           for (( i=1; i<$denominator; i++ ))
           do
             partition=$(printf "partition_%04d.csv" $i)
@@ -63,18 +63,11 @@ jobs:
           # List files in dir
           ls
 
-      - name: Add conda to system path
-        run: echo $CONDA/bin >> $GITHUB_PATH
-
-      - name: Source conda
-        run: source $CONDA/etc/profile.d/conda.sh
-
-      - name: Set Python to 3.10.10
-        run:
-         conda install -y python=3.10.10
-
-      - name: Install dependencies
+      - name: Set up conda and python
         run: |
+          echo $CONDA/bin >> $GITHUB_PATH
+          source $CONDA/etc/profile.d/conda.sh
+          conda install -y python=3.10.10
           source activate
           conda init
           conda install git-lfs -c conda-forge
